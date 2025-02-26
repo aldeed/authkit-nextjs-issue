@@ -1,40 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+This shows an issue with `@workos-inc/authkit-nextjs`. The project was created with:
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```sh
+npx create-next-app@latest
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Options:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```
+✔ What is your project named? … next-esm-example
+✔ Would you like to use TypeScript? … Yes
+✔ Would you like to use ESLint? … Yes
+✔ Would you like to use Tailwind CSS? … No
+✔ Would you like your code inside a `src/` directory? … No
+✔ Would you like to use App Router? (recommended) … No
+✔ Would you like to use Turbopack for `next dev`? … No
+✔ Would you like to customize the import alias (`@/*` by default)? … No
+Creating a new Next.js app in /Users/eric/Code/qawolf/next-esm-example.
+```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+And then:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+```sh
+npm i @workos-inc/authkit-nextjs
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Then added this in `pages/_app.tsx`
 
-## Learn More
+```ts
+import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components";
+```
 
-To learn more about Next.js, take a look at the following resources:
+When running `npm run build`, there is an error due to Node.js code imported by browser code:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```
+node:http
+Module build failed: UnhandledSchemeError: Reading from "node:http" is not handled by plugins (Unhandled scheme).
+Webpack supports "data:" and "file:" URIs by default.
+You may need an additional plugin to handle "node:" URIs.
+    at /Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:28:406935
+    at Hook.eval [as callAsync] (eval at create (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:13:9218), <anonymous>:6:1)
+    at Object.processResource (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:28:406860)
+    at processResource (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js:1:5308)
+    at iteratePitchingLoaders (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js:1:4667)
+    at runLoaders (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js:1:8590)
+    at NormalModule._doBuild (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:28:406722)
+    at NormalModule.build (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:28:408735)
+    at /Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:28:82434
+    at NormalModule.needBuild (/Users/eric/Code/qawolf/next-esm-example/node_modules/next/dist/compiled/webpack/bundle5.js:28:412676)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Import trace for requested module:
+node:http
+./node_modules/@workos-inc/node/lib/common/net/node-client.js
+./node_modules/@workos-inc/node/lib/index.js
+./node_modules/@workos-inc/authkit-nextjs/dist/esm/workos.js
+./node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js
+./node_modules/@workos-inc/authkit-nextjs/dist/esm/components/impersonation.js
+./node_modules/@workos-inc/authkit-nextjs/dist/esm/components/index.js
+```
